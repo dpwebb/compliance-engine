@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "required": ["version", "creditors"],
+  "properties": {
+    "version": { "type": ["integer", "string"] },
+    "updated": { "type": "string" },
+    "creditors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "legal_name", "contacts"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "legal_name": { "type": "string", "minLength": 1 },
+          "business_number": { "type": "string" },
+          "provinces": { "type": "array", "items": { "type": "string" } },
+          "contacts": {
+            "type": "object",
+            "required": ["legal_address"],
+            "properties": {
+              "disputes_email": { "type": "string" },
+              "privacy_email": { "type": "string" },
+              "legal_address": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
