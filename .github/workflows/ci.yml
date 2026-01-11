@@ -14,11 +14,15 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install tools
-        run: pip install ruff black isort mypy pytest
+        run: pip install --upgrade ruff black isort mypy pytest
       - name: Lint & tests (non-blocking)
         run: |
-          ruff . || true
+          ruff --version
+          ruff check . || true
+          black --version
           black --check . || true
+          isort --version-number
           isort --check-only . || true
+          mypy --version
           mypy --strict || true
           pytest -q || true
