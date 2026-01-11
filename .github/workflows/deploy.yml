@@ -25,9 +25,9 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
-      - name: Terraform plan/apply
+      - name: Terraform init/plan/apply
         run: |
           cd infra/terraform
           terraform init -input=false
-          terraform plan -input=false
-          terraform apply -auto-approve -input=false
+          terraform plan -input=false -var "environment=${{ inputs.environment }}"
+          terraform apply -auto-approve -input=false -var "environment=${{ inputs.environment }}"
