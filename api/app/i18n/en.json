@@ -1,0 +1,7 @@
+{
+  "letters": {
+    "bureau_dispute": "Dispute notice to credit bureau.",
+    "creditor_dispute": "Dispute notice to creditor.",
+    "collector_validation": "Validation request to debt collector."
+  }
+}
