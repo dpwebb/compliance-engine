@@ -1,11 +1,11 @@
 {
   "name": "compliance-engine",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
-  "features": {
-    "ghcr.io/devcontainers/features/aws-cli:1": { "version": "2" }
-  },
-  "postCreateCommand": "pip install -r api/requirements.txt && curl -L -o /usr/local/bin/opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64 && chmod +x /usr/local/bin/opa",
+  "postCreateCommand": "pip install -r api/requirements.txt && curl -L -o /usr/local/bin/opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64 && chmod +x /usr/local/bin/opa || true",
   "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "FastAPI", "onAutoForward": "openBrowser" }
+  },
   "customizations": {
     "vscode": {
       "settings": { "python.defaultInterpreterPath": "/usr/local/bin/python" },
