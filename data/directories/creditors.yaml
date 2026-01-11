@@ -1,0 +1,19 @@
+version: 1
+updated: 2026-01-11
+creditors:
+  - id: "bank_generic_1"
+    legal_name: "Example Bank of Canada"
+    business_number: "BN-TO-UPDATE"
+    provinces: ["AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT"]
+    contacts:
+      disputes_email: "TO-UPDATE@examplebank.ca"
+      privacy_email: "TO-UPDATE@examplebank.ca"
+      legal_address: "TO-UPDATE, City, Prov, Canada"
+  - id: "telco_generic_1"
+    legal_name: "Example Telecom Inc."
+    business_number: "BN-TO-UPDATE"
+    provinces: ["AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT"]
+    contacts:
+      disputes_email: "TO-UPDATE@exampletelco.ca"
+      privacy_email: "TO-UPDATE@exampletelco.ca"
+      legal_address: "TO-UPDATE, City, Prov, Canada"
