@@ -1,0 +1,31 @@
+name: yaml-validate
+on:
+  push:
+    paths:
+      - "data/**/*.yaml"
+      - "data/**/*.yml"
+      - "scripts/validate_yaml.py"
+      - ".yamllint"
+  pull_request:
+    paths:
+      - "data/**/*.yaml"
+      - "data/**/*.yml"
+      - "scripts/validate_yaml.py"
+      - ".yamllint"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validators
+        run: pip install --upgrade pyyaml jsonschema yamllint
+      - name: yamllint (non-blocking)
+        run: yamllint data || true
+      - name: schema validate (non-blocking)
+        run: python scripts/validate_yaml.py || true
