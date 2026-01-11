@@ -6,12 +6,12 @@ resource "aws_s3_bucket" "artifacts" {
   bucket        = "ce-artifacts-${data.aws_caller_identity.current.account_id}"
   force_destroy = false
   tags = {
-    Project = "compliance-engine"
+    Project     = "compliance-engine"
     Environment = "staging"
   }
 }
 
-# S3 object ownership: disable ACLs (recommended) and enforce bucket owner
+# Enforce bucket-owner ownership (no ACLs)
 resource "aws_s3_bucket_ownership_controls" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
   rule { object_ownership = "BucketOwnerEnforced" }
@@ -41,24 +41,27 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
   }
 }
 
-# Require TLS for all requests (deny HTTP)
-data "aws_iam_policy_document" "require_tls" {
-  statement {
-    sid     = "DenyInsecureTransport"
-    effect  = "Deny"
-    actions = ["s3:*"]
-    principals { type = "*" identifiers = ["*"] }
-    resources = [
-      aws_s3_bucket.artifacts.arn,
-      "${aws_s3_bucket.artifacts.arn}/*"
-    ]
-    condition { test = "Bool" variable = "aws:SecureTransport" values = ["false"] }
-  }
-}
-
+# Require TLS for all requests (deny HTTP) — JSON policy avoids principals syntax issues
 resource "aws_s3_bucket_policy" "require_tls" {
   bucket = aws_s3_bucket.artifacts.id
-  policy = data.aws_iam_policy_document.require_tls.json
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "DenyInsecureTransport",
+        Effect    = "Deny",
+        Principal = "*",
+        Action    = "s3:*",
+        Resource  = [
+          aws_s3_bucket.artifacts.arn,
+          "${aws_s3_bucket.artifacts.arn}/*"
+        ],
+        Condition = {
+          Bool = { "aws:SecureTransport" = "false" }
+        }
+      }
+    ]
+  })
   depends_on = [
     aws_s3_bucket_public_access_block.artifacts,
     aws_s3_bucket_ownership_controls.artifacts
