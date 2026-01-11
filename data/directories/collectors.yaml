@@ -1,0 +1,17 @@
+version: 1
+updated: 2026-01-11
+collectors:
+  - id: "collector_generic_1"
+    legal_name: "Example Collections Ltd."
+    operating_names: ["Example Collections"]
+    licenses:
+      - province: "ON"
+        number: "LIC-TO-UPDATE"
+        expiry: "YYYY-MM-DD"
+      - province: "QC"
+        number: "LIC-TO-UPDATE"
+        expiry: "YYYY-MM-DD"
+    contacts:
+      disputes_email: "TO-UPDATE@ex-collections.ca"
+      complaints_email: "TO-UPDATE@ex-collections.ca"
+      registered_address: "TO-UPDATE, City, Prov, Canada"
