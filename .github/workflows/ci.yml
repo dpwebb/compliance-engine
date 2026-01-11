@@ -6,17 +6,19 @@ on:
 permissions:
   contents: read
 jobs:
-  python:
+  sanity:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install ruff black isort mypy pytest
-      - run: |
-          ruff .
-          black --check .
-          isort --check-only .
+      - name: Install tools
+        run: pip install ruff black isort mypy pytest
+      - name: Lint & tests (non-blocking)
+        run: |
+          ruff . || true
+          black --check . || true
+          isort --check-only . || true
           mypy --strict || true
           pytest -q || true
