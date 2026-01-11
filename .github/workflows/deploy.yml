@@ -25,9 +25,27 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
-      - name: Terraform init/plan/apply
+      - name: Terraform init / select workspace
         run: |
+          set -e
           cd infra/terraform
           terraform init -input=false
-          terraform plan -input=false -var "environment=${{ inputs.environment }}"
-          terraform apply -auto-approve -input=false -var "environment=${{ inputs.environment }}"
+          terraform workspace select "${{ inputs.environment }}" || terraform workspace new "${{ inputs.environment }}"
+      - name: Import existing S3 bucket (safe if already in state)
+        run: |
+          set -e
+          cd infra/terraform
+          BUCKET="ce-artifacts-$(aws sts get-caller-identity --query Account --output text)"
+          # Import bucket; ignore error if it isn't created yet in AWS or already in state
+          terraform import -input=false aws_s3_bucket.artifacts "$BUCKET" || true
+          # Try importing related configs (ignore if not present yet)
+          terraform import -input=false aws_s3_bucket_public_access_block.artifacts "$BUCKET" || true
+          terraform import -input=false aws_s3_bucket_versioning.artifacts "$BUCKET" || true
+          terraform import -input=false aws_s3_bucket_server_side_encryption_configuration.artifacts "$BUCKET" || true
+          terraform import -input=false aws_s3_bucket_ownership_controls.artifacts "$BUCKET" || true
+          terraform import -input=false aws_s3_bucket_policy.require_tls "$BUCKET" || true
+      - name: Terraform plan/apply
+        run: |
+          cd infra/terraform
+          terraform plan  -input=false -var "environment=${{ inputs.environment }}"
+          terraform apply -input=false -auto-approve -var "environment=${{ inputs.environment }}"
