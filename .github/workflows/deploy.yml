@@ -21,13 +21,13 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
-      - name: Terraform plan/apply (placeholder)
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+      - name: Terraform plan/apply
         run: |
-          if [ -d infra/terraform ]; then
-            cd infra/terraform
-            terraform init
-            terraform plan -input=false
-            terraform apply -auto-approve -input=false
-          else
-            echo "infra/terraform not present yet; skipping."
-          fi
+          cd infra/terraform
+          terraform init -input=false
+          terraform plan -input=false
+          terraform apply -auto-approve -input=false
